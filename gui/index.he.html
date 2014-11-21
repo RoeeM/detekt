@@ -1,0 +1,127 @@
+<html>
+<head>
+<link rel="stylesheet" href="static/css/bootstrap.min.css">
+<link rel="stylesheet" href="static/css/bootflat.min.css">
+% if action == 'running':
+    <meta http-equiv="refresh" content="5; URL=/check">
+% end
+</head>
+<body style="background-color: #f1f2f6;">
+    <div class="container-fluid" dir="rtl">
+        <div class="row">
+            <div class="well">
+                <img src="static/logo.png" />
+            </div>
+        </div>
+
+        % if action == 'start':
+            % include('languages.html', language=language)
+
+            % if connection:
+                <div class="alert alert-warning"><strong>אזהרה!</strong>נראה שאתה מחובר לאינטרנט. עליך להתנתק מכל רשת אלחוטית או קווית בזמן הבדיקה.</div>
+            % end
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>מה זה?</strong></h3>
+                </div>
+                <div class="panel-body">
+                    זהו כלי פשוט המנסה לזהות נוזקות הפועלות במחשב שלך.
+                    בזמן ריצת התכנית, היא תנסה לאתר תוכנות חשודות בזיכרון. אם ברשותך תוכנות רצות כלשהן (כמו Skype, דפדפן וכדומה.) אנא סגור אותן במטרה לשפר את ביצועי הסריקה ולמנוע סיכוי לחשדות שווא. הסריקה תקח כמה דקות, אנא התאזר בסבלנות.
+                </div>
+            </div>
+
+            <p>
+                <a class="btn btn-lg btn-primary btn-block" href="/scan">סרוק עכשיו!</a>
+            </p>
+        % end
+
+        % if action == 'running':
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>סורק...</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <p>הסריקה מתבצעת. זה יכול לקחת כמה דקות, אנא התאזר בסבלנות ואל תפריע לפעולת הסורק עד שהוא מסתיים.
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                    </div>
+                    <p style="text-align: center;"><a href="/check">רענן</a><br /><small>מתעדכן אוטומטית בכל 5 שניות</small></p>
+                </div>
+            </div>
+        % end
+
+        % if action == 'results':
+            % if errors:
+                <div class="alert alert-warning">
+                    <h4>אזהרה!</h4>
+                    כמה <strong>שגיאות התרחשו.</strong> הן עלולות להשפיע על תוצאות הסריקה.
+                    <ul>
+                        % for error in errors:
+                            % if error == 'NOT_AN_ADMIN':
+                                <li>עליך להריץ את האפליקציה כמנהל!</li>
+                            % elif error == 'UNSUPPORTED_WINDOWS':
+                                <li>אתה מריץ גירסא לא נתמכת של Microsoft Windows.</li>
+                            % elif error == 'NO_DRIVER':
+                                <li>לא נמצא דרייבר מתאים לשימוש.</li>
+                            % elif error == 'SERVICE_NO_START':
+                                <li>לא יכול להפעיל את השירות. נסה לאתחל את התוכנה או את המחשב שלך ונסה שנית.</li>
+                            % elif error == 'SCAN_FAILED':
+                                <li>הסריקה נכשלה. אנא נסה להסיר ולהתקין בשנית את התוכנה. אם זה עדיין לא עוזר, אנא שלח לנו את קבצי היומן שלך וננסה לתקן בהקדם.</li>
+                            % end
+                        % end
+                    </ul>
+                </div>
+            % else:
+                % if infected:
+                    <div class="alert alert-danger">
+                        <h4>סכנה!</h4>
+                        <strong>הצלחתי לזהות נוכחות של כמה רוגלות!</strong>עליך לכבות את המחשב. לא לחברו לעולם לאינטרנט או להתקנים חיצוניים ולפנות לעזרה.<br /><br />
+                        תוכל למצוא מידע נוסף ועזרה באתר: <b>https://www.resistsurveillance.org/emergency</b>
+                    </div>
+
+                    <p>זה מה שגיליתי:</p>
+                    <ul>
+                        % for detection in results:
+                            <li><strong>{{detection}}</strong><br />
+                            % if detection == 'BlackShades RAT':
+                                זוהי רוגלה נפוצה המופצת בחינם להורדה באינטרנט לכולם. היא אמורה להיות מזוהה על ידי רוב תוכנות האנטי וירוס. אף על פי שזה בלתי אפשרי לנחש מי הדביק אותך, לשם כך עליך לפנות לעזרה מקצועית.
+                            
+                            % elif detection == 'DarkComet RAT':
+                                זוהי רוגלה נפוצה המופצת בחינם להורדה באינטרנט לכולם. היא אמורה להיות מזוהה על ידי רוב תוכנות האנטי וירוס. אף על פי שזה בלתי אפשרי לנחש מי הדביק אותך, לשם כך עליך לפנות לעזרה מקצועית.
+
+                            % elif detection == 'FinFisher FinSpy':
+                                זוהי דלת אחורית מתוחכמת מאוד היוצר על ידי חברה גרמנית ונמכרה לגופים ממשלתיים ברחבי העולם. ייתכן שאתה על הכוונת של ממשלתך או של ממשלה זרה. אתה צריך להיות זהיר מאוד בצעדים הבאים שלך כדי לא לסכן את עצמך.
+
+                            % elif detection == 'Gh0st':
+                                זוהי רוגלה נפוצה המופצת בחינם להורדה באינטרנט לכולם. היא אמורה להיות מזוהה על ידי רוב תוכנות האנטי וירוס. אף על פי שזה בלתי אפשרי לנחש מי הדביק אותך, לשם כך עליך לפנות לעזרה מקצועית.
+
+                            % elif detection == 'Njrat':
+                                זוהי רוגלה נפוצה המופצת בחינם להורדה באינטרנט לכולם. היא אמורה להיות מזוהה על ידי רוב תוכנות האנטי וירוס. אף על פי שזה בלתי אפשרי לנחש מי הדביק אותך, לשם כך עליך לפנות לעזרה מקצועית.
+
+                            % elif detection == 'Hacking Team RCS Scout' or detection == 'Hacking Team RCS Backdoor':
+                                זוהי דלת אחורית מתוחכמת מאוד היוצר על ידי חברה איטלקית ונמכרה לגופים ממשלתיים ברחבי העולם. ייתכן שאתה על הכוונת של ממשלתך או של ממשלה זרה. אתה צריך להיות זהיר מאוד בצעדים הבאים שלך כדי לא לסכן את עצמך.
+                                
+                            % elif detection == 'ShadowTech RAT':
+                                זוהי רוגלה נפוצה המופצת בחינם להורדה באינטרנט לכולם. היא אמורה להיות מזוהה על ידי רוב תוכנות האנטי וירוס. אף על פי שזה בלתי אפשרי לנחש מי הדביק אותך, לשם כך עליך לפנות לעזרה מקצועית.
+
+                            % elif detection == 'Xtreme RAT':
+                                זוהי רוגלה נפוצה המופצת בחינם להורדה באינטרנט לכולם. היא אמורה להיות מזוהה על ידי רוב תוכנות האנטי וירוס. אף על פי שזה בלתי אפשרי לנחש מי הדביק אותך, לשם כך עליך לפנות לעזרה מקצועית.
+
+                            % end
+                            </li>
+                        % end
+                    </ul>
+                % else:
+                    <div class="alert alert-success">
+                        <h4>נראה טוב.</h4>
+                        לא יכלתי לזהות שום נוכחות של רוגלות מוכרות. שים לב שזה לא אומר בהכרח שהמחשב שלך נקי. אם יש לך חשדות כלשהם או אתה חושב שסומנת כמטרה, אנא פנה לעזרה מקצועית.
+<br /><br />
+                        תוכל למצוא מידע נוסף באתר: <b>https://www.resistsurveillance.org/emergency</b>
+                    </div>
+                % end
+            % end
+        % end
+    </div>
+</body>
+</html>
